@@ -55,6 +55,32 @@ BRIGHTNESS should be a number between 0 and 1 (e.g., 0.7 for 70% brightness)."
     (xrandr-control-execute args)
     (message "Set brightness to %.2f for output %s" brightness primary-output)))
 
+(defun xrandr-control-list-monitors ()
+  "List all active monitors configured by xrandr.
+Returns an associative list where each key is a monitor name (string)
+and each value is a plist of its attributes: width, height, x-offset,
+y-offset, and primary status."
+  (let ((output (xrandr-control-execute "--listmonitors")))
+    (with-temp-buffer
+      (insert output)
+      (goto-char (point-min))
+      (let (monitors)
+        (while (re-search-forward "^ *[0-9]+: +\\(?:\\+\\*?\\)?\\([a-zA-Z0-9_-]+\\) \\([0-9]+\\)/[0-9]+x\\([0-9]+\\)/[0-9]+\\([-+0-9]+\\)\\([-+0-9]+\\) \\*?\\(primary\\)?" nil t)
+          (let ((name (match-string 1))
+                (width (string-to-number (match-string 2)))
+                (height (string-to-number (match-string 3)))
+                (x-offset (string-to-number (match-string 4)))
+                (y-offset (string-to-number (match-string 5)))
+                (primary (match-string 6)))
+            (push (list name
+                        :width width
+                        :height height
+                        :x-offset x-offset
+                        :y-offset y-offset
+                        :primary (if primary t nil))
+                  monitors)))
+        (nreverse monitors)))))
+
 (provide 'xrandr-control)
 
 ;;; xrandr-control.el ends here

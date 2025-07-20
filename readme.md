@@ -20,6 +20,8 @@ Execute xrandr Command: Call (xrandr-control-execute "arguments") with desired x
 
 Set Brightness: Run M-x xrandr-control-set-brightness and enter a value between 0.0 and 1.0 when prompted.
 
+List monitors: Run M-x xrandr-control-list-monitors.
+
 ## Requirements
 
 Emacs 24.3 or later
