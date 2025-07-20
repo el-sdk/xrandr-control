@@ -81,6 +81,23 @@ y-offset, and primary status."
                   monitors)))
         (nreverse monitors)))))
 
+(defun xrandr-control-rotate-monitor (display rotation)
+  "Rotate the specified DISPLAY to ROTATION.
+DISPLAY is the name of the monitor (e.g., 'eDP-1').
+ROTATION is one of 'normal', 'left', 'right', or 'inverted'."
+  (interactive
+   (let* ((monitors (xrandr-control-list-monitors))
+          (display (completing-read "Select monitor: "
+                                    (mapcar #'car monitors) nil t))
+          (rotation (completing-read "Select rotation: "
+                                     '("normal" "left" "right" "inverted") nil t)))
+     (list display rotation)))
+  (unless (member rotation '("normal" "left" "right" "inverted"))
+    (error "Invalid rotation: must be normal, left, right, or inverted"))
+  (let ((args (format "--output %s --rotate %s" display rotation)))
+    (xrandr-control-execute args)
+    (message "Rotated monitor %s to %s" display rotation)))
+
 (provide 'xrandr-control)
 
 ;;; xrandr-control.el ends here

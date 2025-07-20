@@ -22,6 +22,8 @@ Set Brightness: Run M-x xrandr-control-set-brightness and enter a value between 
 
 List monitors: Run M-x xrandr-control-list-monitors.
 
+Rotate monitor: Run M-x xrandr-control-rotate-monitor.
+
 ## Requirements
 
 Emacs 24.3 or later
