@@ -2,12 +2,6 @@
 
 An Emacs plugin for controlling Linux display settings via xrandr.
 
-## Features
-
-Run xrandr Commands: Use xrandr-control-execute to run arbitrary xrandr commands by passing command-line arguments as a string. Returns the command output or signals an error on failure.
-
-Screen Brightness Control: Adjust the primary display's brightness with xrandr-control-set-brightness, an interactive command that accepts a brightness value between 0.0 and 1.0 (e.g., 0.7 for 70%).
-
 ## Installation
 
 Copy xrandr-control.el to your Emacs load path.
@@ -16,21 +10,39 @@ Add (require 'xrandr-control) to your Emacs configuration (e.g., ~/.emacs or ~/.
 
 ## Usage
 
-Execute xrandr Command: Call (xrandr-control-execute "arguments") with desired xrandr arguments, e.g., (xrandr-control-execute "--output eDP-1 --mode 1920x1080").
+### xrandr-control-set-brightness
 
-Set Brightness: Run M-x xrandr-control-set-brightness and enter a value between 0.0 and 1.0 when prompted.
+- Enter a value between 0.0 and 1.0.
 
-List monitors: Run M-x xrandr-control-list-monitors.
+### xrandr-control-list-monitors
 
-Rotate monitor: Run M-x xrandr-control-rotate-monitor.
+### xrandr-control-rotate-monitor
 
-Create mode: Run M-x xrandr-control-create-mode.
+- Select the monitor
+- Choose the direction
+
+### xrand-control-create-mode
+
+- Give a name to the mode
+- Choose the width
+- Choose the height
+- Choose the refresh-rate
+
+### Execute raw xrandr command
+
+- Call `(xrandr-control-execute "arguments")`
+
+Example:
+
+```lisp
+(xrandr-control-execute "--output eDP-1 --mode 1920x1080")
+```
 
 ## Requirements
 
-Emacs 24.3 or later
+- Emacs 24.3 or later
 
-Linux system with xrandr installed
+- Linux system with xrandr installed
 
 ## License
 
