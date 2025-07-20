@@ -24,6 +24,8 @@ List monitors: Run M-x xrandr-control-list-monitors.
 
 Rotate monitor: Run M-x xrandr-control-rotate-monitor.
 
+Create mode: Run M-x xrandr-control-create-mode.
+
 ## Requirements
 
 Emacs 24.3 or later

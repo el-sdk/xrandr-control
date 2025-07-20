@@ -98,6 +98,40 @@ ROTATION is one of 'normal', 'left', 'right', or 'inverted'."
     (xrandr-control-execute args)
     (message "Rotated monitor %s to %s" display rotation)))
 
+(defun xrandr-control-create-mode (display-mode-name width height refresh-rate)
+  "Create a new mode with DISPLAY-MODE-NAME, WIDTH, HEIGHT, and REFRESH-RATE.
+DISPLAY-MODE-NAME is a string (e.g., '1920x1080_60').
+WIDTH and HEIGHT are in pixels.
+REFRESH-RATE is in Hz (e.g., 60.0)."
+  (interactive
+   (list
+    (read-string "Mode name (e.g., 1920x1080_60): ")
+    (read-number "Width (pixels): ")
+    (read-number "Height (pixels): ")
+    (read-number "Refresh rate (Hz): ")))
+  (unless (and (stringp display-mode-name) (> (length display-mode-name) 0))
+    (error "Mode name must be a non-empty string"))
+  (unless (and (integerp width) (> width 0))
+    (error "Width must be a positive integer"))
+  (unless (and (integerp height) (> height 0))
+    (error "Height must be a positive integer"))
+  (unless (and (numberp refresh-rate) (> refresh-rate 0))
+    (error "Refresh rate must be a positive number"))
+  (let* ((cvt-output (with-temp-buffer
+                       (call-process-shell-command
+                        (format "cvt %d %d %.2f" width height refresh-rate)
+                        nil t)
+                       (buffer-string)))
+         (modeline (with-temp-buffer
+                     (insert cvt-output)
+                     (goto-char (point-min))
+                     (if (re-search-forward "Modeline \"[^\"]+\" \\(.*\\)$" nil t)
+                         (match-string 1)
+                       (error "Failed to parse cvt output"))))
+         (args (format "--newmode \"%s\" %s" display-mode-name modeline)))
+    (xrandr-control-execute args)
+    (message "Created new mode %s (%dx%d@%.2fHz)" display-mode-name width height refresh-rate)))
+
 (provide 'xrandr-control)
 
 ;;; xrandr-control.el ends here
