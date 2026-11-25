@@ -149,6 +149,17 @@ POSITION is one of 'left-of', 'right-of', 'above', 'below', or 'same-as'."`
     (xrandr-control-execute args)
     (message "Moved display %s relative to display %s" display other-display)))
 
+(defun xrandr-control-auto-mode (display)
+  "Automatically set the optimal mode for a DISPLAY.
+If DISPLAY is disabled, it will be enabled."
+  (interactive
+   (let* ((monitors (xrandr-control-list-monitors)))
+     (display (completing-read "Select monitor: "
+                               (mapcar #'car monitors) nil t))))
+  (let ((args (format "--output %s --auto" display)))
+    (xrandr-control-execute args)
+    (message "Automatically set mode of display %s" display)))
+
 (provide 'xrandr-control)
 
 ;;; xrandr-control.el ends here
