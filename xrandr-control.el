@@ -132,6 +132,23 @@ REFRESH-RATE is in Hz (e.g., 60.0)."
     (xrandr-control-execute args)
     (message "Created new mode %s (%dx%d@%.2fHz)" display-mode-name width height refresh-rate)))
 
+(defun xrandr-control-move-monitor (display position other-display)
+  "Move the DISPLAY relative to another monitor, OTHER-DISPLAY.
+POSITION is one of 'left-of', 'right-of', 'above', 'below', or 'same-as'."`
+  (interactive
+   (let* ((monitors (xrandr-control-list-monitors)))
+     (display (completing-read "Move monitor: "
+                               (mapcar #'car monitors) nil t))
+     (position (completing-read "To position: "
+                                '("left-of" "right-of" "above" "below" "same-as") nil t))
+     (other-display (completing-read "Relative to monitor: "
+                                     (mapcar #'car monitors) nil t))))
+  (unless (member position '("left-of" "right-of" "above" "below" "same-as"))
+    (error "Invalid position: must be left-of, right-of, above, below, or same-as"))
+  (let ((args (format "--output %s --%s %s" display position other-display)))
+    (xrandr-control-execute args)
+    (message "Moved display %s relative to display %s" display other-display)))
+
 (provide 'xrandr-control)
 
 ;;; xrandr-control.el ends here
